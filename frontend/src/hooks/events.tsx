@@ -1,8 +1,8 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSupabase from "./useSupabase";
 import { Database } from "@/app/database.types";
 
-type Event = Database["public"]["Tables"]["Event"]["Row"];
+export type Event = Database["public"]["Tables"]["Event"]["Row"];
 
 export function useGetEvents() {
   const client = useSupabase();
@@ -21,6 +21,7 @@ export function useGetEvents() {
 
 export function usePostEvent() {
   const client = useSupabase();
+  const queryClient = useQueryClient();
 
   const postEvent = async (event: Event) => {
     const { data, error } = await client.from("Event").insert(event);
@@ -31,7 +32,7 @@ export function usePostEvent() {
   return useMutation({
     mutationFn: postEvent,
     onSuccess: () => {
-      console.log("Event posted");
+      queryClient.invalidateQueries({ queryKey: ["getEvents"] });
     },
   });
 }

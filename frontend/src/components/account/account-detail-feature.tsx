@@ -32,7 +32,7 @@ export default function AccountDetailFeature() {
   }
 
   return (
-    <div>
+    <div className="min-w-[65vw]">
       <Greeter address={address.toString()} />
       <AppHero
         title={<AccountBalance address={address} />}
